@@ -1,0 +1,33 @@
+<div class="sentiment">
+    <ng-container *ngIf="!loading && stock && stockSentiments; else spinner">
+        <h3>{{stock.description}}</h3>
+        <div class="monthly-container">
+            <div class="monthly-data" *ngFor="let stockSentiment of stockSentiments">
+                <div class="month-container">
+                    <span class="month-name">{{monthNames[stockSentiment.month]}}</span>
+                    <div class="month-data">
+                        <span><i>Change: </i></span>
+                        <span>{{stockSentiment.change > 0 ? '+' + stockSentiment.change : stockSentiment.change}}</span>
+                    </div>
+                    <div class="month-data">
+                        <span><i>MSPR: </i></span>
+                        <span>{{stockSentiment.mspr}}</span>
+                    </div>
+                </div>
+                <div class="current-trend-arrow">
+                    <ng-container *ngIf="stockSentiment.change >= 0; else trendingDown">
+                        <span class="green">🢁</span>
+                    </ng-container>
+                    <ng-template #trendingDown>
+                        <span class="red">🢃</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #spinner>
+        <spinner *ngIf="loading"></spinner>
+    </ng-template>
+</div>
+
+<button [routerLink]="['/stock-search']">< Back to the list of stocks</button>

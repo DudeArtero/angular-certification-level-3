@@ -1,0 +1,6 @@
+<div mat-dialog-content>
+    <div *ngFor="let stock of data.stocks" class="stock-item" [mat-dialog-close]="stock">
+        <span class="title">{{stock.displaySymbol}}</span>
+        <span class="description">{{stock.description}}</span>
+    </div>
+</div>
