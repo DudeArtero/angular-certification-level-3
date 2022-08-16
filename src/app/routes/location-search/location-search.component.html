@@ -1,0 +1,35 @@
+<div class="location-controls">
+	<span>Add a location to see the weather</span>
+
+	<form class="location-form" [formGroup]="formGroupLocation" (ngSubmit)="onSubmitStock()">
+		<input formControlName="zipcodeInput" type="number" placeholder="Search a zipcode..." />
+		<input-autocomplete formControlName="countryInput" [items]="(getCountries$ | async) ?? []"></input-autocomplete>
+		<state-button [observe]="searchLocation$" (onComplete)="addLocationCard($event)">
+			<ng-template stateButtonContent [state]="stateButtonState.IDLE">
+				<div class="state-button-container idle">
+					Add location
+				</div>
+			</ng-template>
+			<ng-template stateButtonContent [state]="stateButtonState.LOADING">
+				<div class="state-button-container loading">
+					<span>Adding...</span>
+					<spinner [style.width.px]="20" [style.height.px]="20"></spinner>
+				</div>
+			</ng-template>
+			<ng-template stateButtonContent [state]="stateButtonState.DONE">
+				<div class="state-button-container done">
+					DONE!
+				</div>
+			</ng-template>
+		</state-button>
+	</form>
+
+	<div *ngIf="zipcodeInput?.touched || zipcodeInput?.dirty" class="alert">
+		<span *ngIf="zipcodeInput?.errors?.['required']">A valid number is required.</span>
+	</div>
+</div>
+
+<div class="location-items">
+	<location-item *ngFor="let stock of stocks$ | async" [stock]="stock" (onRemove)="removeStock($event)">
+	</location-item>
+</div>

@@ -2,13 +2,16 @@
     display: flex;
     padding: 16px 24px;
     height: 135px;
+    background-color: #f8f8f8;
+    outline: 1px solid #92a6ff;
+    border-radius: 6px;
 
-    .stock-container {
+    .location-container {
         display: flex;
         flex-direction: column;
         width: 80%;
 
-        .stock-data {
+        .location-data {
             display: flex;
             gap: 16px;
 
@@ -28,22 +31,6 @@
         button {
             margin-top: 12px;
             width: 50%;
-        }
-    }
-
-    .current-trend-arrow {
-        float: right;
-        display: flex;
-        width: 20%;
-        justify-content: center;
-        align-items: center;
-        font-size: 40px;
-
-        span.green {
-            color: green;
-        }
-        span.red {
-            color: red;
         }
     }
 

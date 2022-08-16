@@ -4,21 +4,21 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'stock-search',
+    redirectTo: 'weather-location-search',
     pathMatch: 'full',
   },
   {
-    path: 'stock-search',
+    path: 'weather-location-search',
     loadChildren: () =>
-      import('./routes/stock-search/stock-search.module').then(
-        (m) => m.StockSearchModule
+      import('./routes/location-search/location-search.module').then(
+        (m) => m.LocationSearchModule
       ),
   },
   {
     path: 'stock-sentiment',
     loadChildren: () =>
-      import('./routes/stock-sentiment/stock-sentiment.module').then(
-        (m) => m.StockSentimentModule
+      import('./routes/location-detail/location-detail.module').then(
+        (m) => m.LocationDetailModule
       ),
   },
   {

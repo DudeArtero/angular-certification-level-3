@@ -1,8 +1,8 @@
 <ng-container *ngIf="stockData; else spinner">
-    <div class="stock-container">
+    <div class="location-container">
         <h3>{{stock.description}}</h3>
     
-        <div class="stock-data">
+        <div class="location-data">
             <div class="first-column">
                 <div>
                     <span><i>Change today: </i></span>
@@ -26,15 +26,6 @@
         </div>
     
         <button [routerLink]="['/stock-sentiment', stock.symbol]">Go to social sentiment details ></button>
-    </div>
-
-    <div class="current-trend-arrow">
-        <ng-container *ngIf="stockData.change >= 0; else trendingDown">
-            <span class="green">🢁</span>
-        </ng-container>
-        <ng-template #trendingDown>
-            <span class="red">🢃</span>
-        </ng-template>
     </div>
 
     <div class="close" (click)="onRemove.emit(stock)">

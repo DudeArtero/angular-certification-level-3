@@ -1,0 +1,69 @@
+:host {
+    display: block;
+    margin: 24px auto;
+    width: 600px;
+
+    .location-controls {
+        padding: 16px 24px;
+        background-color: #f8f8f8;
+        outline: 1px solid #92a6ff;
+        border-radius: 6px;
+    }
+
+    .location-controls {
+        .location-form {
+            display: flex;
+            margin-top: 8px;
+            gap: 16px;
+
+            input, input-autocomplete, .state-button-container  {
+                height: 24px;
+            }
+
+            spinner {
+                width: 12px;
+                height: 12px;
+                float: right;
+            }
+    
+            .state-button-container {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                &.idle, &.loading, &.done {
+                    outline: 1px solid;
+                    padding: 0 4px;
+                    border-radius: 4px;
+                }
+
+                &.idle {
+                    outline-color: blueviolet;
+                    background-color: lightblue;
+                }
+                &.loading {
+                    outline-color: yellow;
+                    background-color: lightyellow;
+                }
+                &.done {
+                    outline-color: green;
+                    background-color: lightgreen;
+                }
+            }
+        }
+    
+        .alert {
+            margin-top: 8px;
+            span {
+                color: red;
+            }
+        }
+    }
+
+    .location-items {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 24px;
+    }
+}
