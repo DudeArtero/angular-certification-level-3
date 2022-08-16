@@ -4,6 +4,7 @@ import { InputAutocompleteComponent } from "./components/input-autocomplete/inpu
 import { SpinnerComponent } from "./components/spinner/spinner.component";
 import { StateButtonContentDirective } from "./components/state-button/state-button-content.directive";
 import { StateButtonComponent } from "./components/state-button/state-button.component";
+import { BoldFilterPipe } from "./pipes/bold-filter.pipe";
 
 @NgModule({
     imports: [
@@ -13,7 +14,8 @@ import { StateButtonComponent } from "./components/state-button/state-button.com
         SpinnerComponent,
         StateButtonComponent,
         InputAutocompleteComponent,
-        StateButtonContentDirective
+        StateButtonContentDirective,
+        BoldFilterPipe
     ],
     exports: [
         SpinnerComponent,

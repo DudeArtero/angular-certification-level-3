@@ -1,6 +1,5 @@
 <input #inputElement type="text" [placeholder]="placeholder" [value]="value?.label" (input)="onInput(inputElement.value)">
 <ul *ngIf="showPredictiveOptions" class="predictive-options">
-    <li *ngFor="let item of filteredItems" (click)="onSelectItem(item)">
-        {{item.label}}
+    <li *ngFor="let item of filteredItems" (click)="onSelectItem(item)" [innerHtml]="item.label | boldFilter:filter">
     </li>
 </ul>
