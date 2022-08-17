@@ -1,33 +1,18 @@
-<div class="sentiment">
-    <ng-container *ngIf="!loading && stock && stockSentiments; else spinner">
-        <h3>{{stock.description}}</h3>
-        <div class="monthly-container">
-            <div class="monthly-data" *ngFor="let stockSentiment of stockSentiments">
-                <div class="month-container">
-                    <span class="month-name">{{monthNames[stockSentiment.month]}}</span>
-                    <div class="month-data">
-                        <span><i>Change: </i></span>
-                        <span>{{stockSentiment.change > 0 ? '+' + stockSentiment.change : stockSentiment.change}}</span>
-                    </div>
-                    <div class="month-data">
-                        <span><i>MSPR: </i></span>
-                        <span>{{stockSentiment.mspr}}</span>
-                    </div>
-                </div>
-                <div class="current-trend-arrow">
-                    <ng-container *ngIf="stockSentiment.change >= 0; else trendingDown">
-                        <span class="green">🢁</span>
-                    </ng-container>
-                    <ng-template #trendingDown>
-                        <span class="red">🢃</span>
-                    </ng-template>
-                </div>
+<div class="weather-location-details">
+    <ng-container *ngIf="location; else spinner">
+        <h3>{{location.name}} ({{location.zipcode}}, {{location.countryCode}})</h3>
+    
+        <div *ngIf="location.data" class="location-data">
+            <span>Current conditions: {{location.data.main}}</span>
+            <span><i>Temperatures today:</i></span>
+            <div class="location-temperatures">
+                <span>Current {{location.data.currentTemp}} - Max {{location.data.maxTemp}} - Min {{location.data.minTemp}}</span>
             </div>
         </div>
     </ng-container>
     <ng-template #spinner>
-        <spinner *ngIf="loading"></spinner>
+        <spinner></spinner>
     </ng-template>
 </div>
 
-<button [routerLink]="['/stock-search']">< Back to the list of stocks</button>
+<button [routerLink]="['/weather-location-search']">< Back to the list of locations</button>

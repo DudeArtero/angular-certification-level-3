@@ -1,7 +1,7 @@
 <div class="location-controls">
 	<span>Add a location to see the weather</span>
 
-	<form class="location-form" [formGroup]="formGroupLocation" (ngSubmit)="onSubmitStock()">
+	<form class="location-form" [formGroup]="formGroupLocation" (ngSubmit)="onSubmit()">
 		<input formControlName="zipcodeInput" type="number" placeholder="Search a zipcode..." />
 		<input-autocomplete formControlName="countryInput" [items]="(getCountries$ | async) ?? []"></input-autocomplete>
 		<state-button [observe]="searchLocation$" (onComplete)="addLocationCard($event)">
@@ -30,6 +30,6 @@
 </div>
 
 <div class="location-items">
-	<location-item *ngFor="let stock of stocks$ | async" [stock]="stock" (onRemove)="removeStock($event)">
+	<location-item *ngFor="let location of locations$ | async" [location]="location" (onRemove)="removeLocation($event)">
 	</location-item>
 </div>

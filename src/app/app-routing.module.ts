@@ -15,7 +15,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'stock-sentiment',
+    path: 'weather-location-detail',
     loadChildren: () =>
       import('./routes/location-detail/location-detail.module').then(
         (m) => m.LocationDetailModule
@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'stock-manager',
+    redirectTo: 'weather-location-search',
     pathMatch: 'full',
   },
 ];

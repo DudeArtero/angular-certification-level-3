@@ -1,44 +1,26 @@
-import { Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Stock, StockData } from 'src/app/models/stock.model';
+import { Component, EventEmitter, Host, Input, OnInit, Output } from '@angular/core';
+import { Location } from 'src/app/models/location.model';
 import { WeatherService } from 'src/app/services/weather.service';
+import { LocationMapper } from 'src/app/shared/mappers/location-mapper';
 
 @Component({
     selector: 'location-item',
     templateUrl: './location-item.component.html',
     styleUrls: ['./location-item.component.scss'],
-    host: { "class": "stock-item" }
+    host: { "class": "location-item" }
 })
-export class LocationItemComponent implements OnInit, OnDestroy {
+export class LocationItemComponent implements OnInit {
 
-    @Input() stock!: Stock;
-    stockData!: StockData;
+    @Input() location!: Location;
 
-    #unsubscribeTrigger$ = new Subject();
+    @Output() onRemove: EventEmitter<Location> = new EventEmitter<Location>();
 
-    @Output() onRemove: EventEmitter<Stock> = new EventEmitter<Stock>();
-
-    constructor(private finnhubService: WeatherService, private ngZone: NgZone) { }
-
-    ngOnDestroy(): void {
-        this.#unsubscribeTrigger$.next(null);
-        this.#unsubscribeTrigger$.complete();
-    }
+    constructor(private weatherService: WeatherService) { }
 
     ngOnInit(): void {
-        // // Using ngZone so we can set the local variable of the component because we are sending a callback to the service
-        // this.finnhubService.quote(this.stock.symbol, (error: any, data: any, response: any) => this.ngZone.run(() => {
-        //     const stockData: StockData = {
-        //         currentPrice: data.c,
-        //         change: data.d,
-        //         percentChange: data.dp,
-        //         highPriceDay: data.h,
-        //         lowPriceDay: data.l,
-        //         openPriceDay: data.o,
-        //         previousClosePrice: data.pc
-        //     }
-
-        //     this.stockData = stockData;
-        // }));
+        this.weatherService.searchLocation(this.location.zipcode, this.location.countryCode).subscribe(data => {
+            this.location.data = LocationMapper.mapLocationData(data);
+            console.log(this.location);
+        });
     }
 }

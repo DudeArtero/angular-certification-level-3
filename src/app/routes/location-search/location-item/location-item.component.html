@@ -1,37 +1,25 @@
-<ng-container *ngIf="stockData; else spinner">
+<ng-container *ngIf="location?.data; else spinner">
     <div class="location-container">
-        <h3>{{stock.description}}</h3>
+        <h3>{{location.name}} ({{location.zipcode}}, {{location.countryCode}})</h3>
     
-        <div class="location-data">
-            <div class="first-column">
-                <div>
-                    <span><i>Change today: </i></span>
-                    <span>{{stockData.change}}%</span>
-                </div>
-                <div>
-                    <span><i>Current price: </i></span>
-                    <span>${{stockData.currentPrice}}</span>
-                </div>
-            </div>
-            <div class="second-column">
-                <div>
-                    <span><i>Opening price: </i></span>
-                    <span>${{stockData.openPriceDay}}</span>
-                </div>
-                <div>
-                    <span><i>High price: </i></span>
-                    <span>${{stockData.highPriceDay}}</span>
-                </div>
+        <div *ngIf="location.data" class="location-data">
+            <span>Current conditions: {{location.data.main}}</span>
+            <span><i>Temperatures today:</i></span>
+            <div class="location-temperatures">
+                <span>Current {{location.data.currentTemp}} - Max {{location.data.maxTemp}} - Min {{location.data.minTemp}}</span>
             </div>
         </div>
     
-        <button [routerLink]="['/stock-sentiment', stock.symbol]">Go to social sentiment details ></button>
+        <button [routerLink]="['/weather-location-detail', location.name]">Show 5-day forecast for {{location.name}}</button>
     </div>
-
-    <div class="close" (click)="onRemove.emit(stock)">
-        ❌
+    <div class="weather-icon">
+        <img src="assets/weather-icons/{{location.data?.icon}}.png" alt="">
     </div>
 </ng-container>
+
+<div class="close" (click)="onRemove.emit(location)">
+    ❌
+</div>
 
 <ng-template #spinner>
     <spinner></spinner>

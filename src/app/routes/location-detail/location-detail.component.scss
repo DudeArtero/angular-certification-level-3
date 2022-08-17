@@ -3,56 +3,16 @@
     margin: 24px auto;
     width: 600px;
 
-    .sentiment {
+    .weather-location-details {
         display: flex;
-        flex-direction: column;
+        align-items: center;
         margin: 24px 0;
         padding: 16px 24px;
         background-color: #f8f8f8;
         outline: 1px solid #92a6ff;
         border-radius: 6px;
-        height: 135px;
+        min-height: 135px;
 
-        .monthly-container {
-            display: flex;
-            gap: 32px;
-
-            .monthly-data {
-                flex: 1;
-                display: flex;
-
-                .month-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                    flex: 1;
-
-                    .month-name {
-                        font-weight: bold;
-                    }
-    
-                    .month-data {
-                        display: flex;
-                        justify-content: space-between;
-                    }
-                }
-
-                .current-trend-arrow {
-                    float: right;
-                    display: flex;
-                    width: 20%;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 40px;
-            
-                    span.green {
-                        color: green;
-                    }
-                    span.red {
-                        color: red;
-                    }
-                }
-            }
-        }
+        
     }
 }

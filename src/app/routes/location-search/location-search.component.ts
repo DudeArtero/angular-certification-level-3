@@ -1,19 +1,20 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { StockStorageService } from 'src/app/services/stock-storage.service';
 import { WeatherService } from 'src/app/services/weather.service';
-import { Stock } from 'src/app/models/stock.model';
 import { map, Observable } from 'rxjs';
 import { StateButtonState } from 'src/app/shared/components/state-button/state-button.model';
 import { HttpClient } from '@angular/common/http';
 import { DropdownItem } from 'src/app/shared/components/input-autocomplete/input-autocomplete.model';
+import { LocationStorageService } from 'src/app/services/location-storage.service';
+import { Location } from 'src/app/models/location.model';
+import { LocationMapper } from 'src/app/shared/mappers/location-mapper';
 
 @Component({
     selector: 'location-search',
     templateUrl: './location-search.component.html',
     styleUrls: ['./location-search.component.scss'],
 })
-export class LocationSearchComponent implements OnInit, OnDestroy {
+export class LocationSearchComponent implements OnInit {
 
     formGroupLocation = new FormGroup({
         zipcodeInput: new FormControl<number | null>(null, [
@@ -26,18 +27,14 @@ export class LocationSearchComponent implements OnInit, OnDestroy {
         return this.formGroupLocation.get('zipcodeInput');
     }
 
-    stocks$: Observable<Stock[]>;
+    locations$: Observable<Location[]>;
     getCountries$!: Observable<DropdownItem[]>;
     searchLocation$!: Observable<any>;
 
     stateButtonState = StateButtonState;
 
-    constructor(private stockStorageService: StockStorageService, private weatherService: WeatherService, private http: HttpClient) {
-        this.stocks$ = this.stockStorageService.stocks$;
-    }
-
-    ngOnDestroy(): void {
-
+    constructor(private locationStorageService: LocationStorageService, private weatherService: WeatherService, private http: HttpClient) {
+        this.locations$ = this.locationStorageService.locations$;
     }
 
     ngOnInit(): void {
@@ -47,9 +44,9 @@ export class LocationSearchComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Checks if the form is valid and search for all the filteres stocks in the Finnhub API.
+     * Checks if the form is valid and changes the observable to be executed in the button.
      */
-    onSubmitStock(): void {
+    onSubmit(): void {
         // Marks all the controls as touched so we can see the validation errors
         this.formGroupLocation.markAllAsTouched();
 
@@ -60,15 +57,20 @@ export class LocationSearchComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Adds a new location to the local storage so we can load it later when reloading the browser
+     * @param data Data of the new location
+     */
     addLocationCard(data: any) {
-        console.log(data);
+        let newLocation: Location = LocationMapper.mapLocation(data, this.formGroupLocation.value.zipcodeInput!, this.formGroupLocation.value.countryInput?.id);
+        this.locationStorageService.addLocation(newLocation);
     }
 
     /**
-     * Calls the StockStorageService to remove the retrieved stock.
-     * @param stock Stock from StockItemComponent
+     * Calls the LocationStorageService to remove the retrieved location.
+     * @param location Location from LocationItemComponent
      */
-    removeStock(stock: Stock) {
-        this.stockStorageService.removeStock(stock.symbol);
+    removeLocation(location: Location) {
+        this.locationStorageService.removeLocation(location.name);
     }
 }

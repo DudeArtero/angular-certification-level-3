@@ -1,8 +1,10 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Stock, StockSentiment } from 'src/app/models/stock.model';
+import { Location, LocationData, LocationForecastData } from 'src/app/models/location.model';
+import { LocationStorageService } from 'src/app/services/location-storage.service';
 import { WeatherService } from 'src/app/services/weather.service';
-import { StockStorageService } from 'src/app/services/stock-storage.service';
+import { LocationMapper } from 'src/app/shared/mappers/location-mapper';
+import { ArrayManagement } from 'src/app/shared/utils/array-management';
 
 @Component({
     selector: 'location-detail',
@@ -11,35 +13,34 @@ import { StockStorageService } from 'src/app/services/stock-storage.service';
 })
 export class LocationDetailComponent implements OnInit {
 
-    stockSentiments: StockSentiment[] = [];
-    stock: Stock | undefined;
-    loading: boolean = false;
+    location!: Location;
 
-    monthNames: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    constructor(private route: ActivatedRoute, private finnhubService: WeatherService, private stockStorageService: StockStorageService, private ngZone: NgZone) { }
+    constructor(private route: ActivatedRoute, private weatherService: WeatherService, private locationStorageService: LocationStorageService) { }
 
     ngOnInit(): void {
-        this.loading = true;
-        const symbol = this.route.snapshot.params['symbol'];
+        const name = this.route.snapshot.params['name'];
+        this.location = this.locationStorageService.getLocation(name)!;
 
-        this.stock = this.#getStock(symbol);
-        this.#getStockSentiment(symbol);
+        this.weatherService.searchFiveDayForecast(this.location.zipcode, this.location.countryCode).subscribe(data => {
+            // Transform the dates of the list in the format mm-dd-yyyy so we can group it later
+            data.list.map((item: any) => {
+                let dateItem = new Date(item.dt_txt);
+                item.dt_txt_group_key = this.#getShortDateString(dateItem);
+            })
+
+            let forecastData: any = ArrayManagement.groupBy(data.list, "dt_txt_group_key");
+            let locationDataList: LocationForecastData[] = [];
+
+            for (const key in forecastData) {
+                locationDataList.push({
+                    date: new Date(key),
+                    data: LocationMapper.mapLocationData(forecastData[key][0])
+                });
+            }
+        });
     }
 
-    #getStock(symbol: string): Stock | undefined {
-        return this.stockStorageService.getStock(symbol);
-    }
-
-    #getStockSentiment(symbol: string): void {
-        const today = new Date();
-        today.setDate(1);
-        const threeMonthsbefore = new Date(today.getFullYear(), today.getMonth() - 2, 2);
-
-        // // Using ngZone so we can set the local variable of the component because we are sending a callback to the service
-        // this.finnhubService.insiderSentiment(symbol, threeMonthsbefore, today, (error: any, data: any, response: any) => this.ngZone.run(() => {
-        //     this.stockSentiments = data.data as StockSentiment[];
-        //     this.loading = false;
-        // }));
+    #getShortDateString(date: Date): string {
+        return `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`;
     }
 }

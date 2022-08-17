@@ -6,7 +6,7 @@ import { LocationDetailComponent } from './location-detail.component';
 
 const routes: Routes = [
     {
-        path: ':symbol',
+        path: ':name',
         component: LocationDetailComponent,
     },
 ];

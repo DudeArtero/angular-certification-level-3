@@ -13,6 +13,7 @@ import { DropdownItem } from './input-autocomplete.model';
 })
 export class InputAutocompleteComponent implements ControlValueAccessor {
 
+    // Items shown in the overlay 
     @Input() 
     set items(value: DropdownItem[]) {
         this.#items = value;
@@ -20,7 +21,8 @@ export class InputAutocompleteComponent implements ControlValueAccessor {
     }
     #items: DropdownItem[] = [];
 
-    @Input() value!: DropdownItem;
+    // Selected value of the overlay
+    @Input() value!: DropdownItem | null;
     @Input() placeholder: string = "Search a country...";
 
     @Output() onSelect: EventEmitter<DropdownItem> = new EventEmitter<DropdownItem>();
@@ -37,12 +39,20 @@ export class InputAutocompleteComponent implements ControlValueAccessor {
         ngControl.valueAccessor = this;
     }
 
+    /**
+     * Filter the items of the original item array with the specified value
+     * @param value String filter value
+     */
     onInput(value: string) {
         this.filteredItems = this.#items.filter(item => item.id.toLowerCase().includes(value.toLowerCase()) || item.label.toLowerCase().includes(value.toLowerCase()));
         this.filter = value;
         this.#onTouch();
     }
 
+    /**
+     * Selects the clicked item and emits the value
+     * @param item Selected item
+     */
     onSelectItem(item: DropdownItem) {
         this.value = item;
         this.filteredItems = this.#items;
@@ -52,10 +62,6 @@ export class InputAutocompleteComponent implements ControlValueAccessor {
         this.#onTouch();
         this.#onChange(this.value);
         this.onSelect.emit(item);
-    }
-
-    onClick(event: MouseEvent) {
-        this.showPredictiveOptions = true;
     }
 
     writeValue(value: DropdownItem): void {
