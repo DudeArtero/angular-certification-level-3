@@ -71,6 +71,6 @@ export class LocationSearchComponent implements OnInit {
      * @param location Location from LocationItemComponent
      */
     removeLocation(location: Location) {
-        this.locationStorageService.removeLocation(location.name);
+        this.locationStorageService.removeLocation(location.zipcode, location.name);
     }
 }

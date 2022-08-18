@@ -1,12 +1,21 @@
 <div class="weather-location-details">
-    <ng-container *ngIf="location; else spinner">
-        <h3>{{location.name}} ({{location.zipcode}}, {{location.countryCode}})</h3>
-    
-        <div *ngIf="location.data" class="location-data">
-            <span>Current conditions: {{location.data.main}}</span>
-            <span><i>Temperatures today:</i></span>
-            <div class="location-temperatures">
-                <span>Current {{location.data.currentTemp}} - Max {{location.data.maxTemp}} - Min {{location.data.minTemp}}</span>
+    <ng-container *ngIf="location && locationDataList.length > 0; else spinner">
+        <h3>Forecast of the next days in {{location.name}} ({{location.zipcode}}, {{location.countryCode}})</h3>
+
+        <div *ngFor="let item of locationDataList; let last = last;" [ngClass]="{'separator': !last}"
+            class="forecast-container">
+            <div class="forecast-data">
+                <strong><i>{{item.date | date:'fullDate'}}</i></strong>
+
+                <span>Current conditions: {{item.data.main}}</span>
+                <span><i>Temperatures today:</i></span>
+                <div class="forecast-data-temperatures">
+                    <span>Current {{item.data.currentTemp}} - Max {{item.data.maxTemp}} - Min
+                        {{item.data.minTemp}}</span>
+                </div>
+            </div>
+            <div class="weather-icon">
+                <img src="assets/weather-icons/{{item.data?.icon}}.png" alt="">
             </div>
         </div>
     </ng-container>
@@ -15,4 +24,5 @@
     </ng-template>
 </div>
 
-<button [routerLink]="['/weather-location-search']">< Back to the list of locations</button>
+<button [routerLink]="['/weather-location-search']">
+    < Back to the list of locations</button>

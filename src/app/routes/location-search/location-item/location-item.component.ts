@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Host, Input, OnInit, Output } from '@angular/core';
+import { first } from 'rxjs';
 import { Location } from 'src/app/models/location.model';
 import { WeatherService } from 'src/app/services/weather.service';
 import { LocationMapper } from 'src/app/shared/mappers/location-mapper';
@@ -18,9 +19,11 @@ export class LocationItemComponent implements OnInit {
     constructor(private weatherService: WeatherService) { }
 
     ngOnInit(): void {
-        this.weatherService.searchLocation(this.location.zipcode, this.location.countryCode).subscribe(data => {
-            this.location.data = LocationMapper.mapLocationData(data);
-            console.log(this.location);
-        });
+        this.weatherService.searchLocation(this.location.zipcode, this.location.countryCode)
+            .pipe(first())
+            .subscribe(data => {
+                this.location.data = LocationMapper.mapLocationData(data);
+                console.log(this.location);
+            });
     }
 }

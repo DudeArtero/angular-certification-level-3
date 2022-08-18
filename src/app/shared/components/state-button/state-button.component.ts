@@ -1,5 +1,5 @@
-import { AfterContentInit, AfterViewInit, Component, ContentChildren, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, QueryList, SimpleChanges, TemplateRef } from '@angular/core';
-import { delay, first, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { AfterContentInit, Component, ContentChildren, EventEmitter, HostBinding, Input, OnChanges, Output, QueryList, SimpleChanges, TemplateRef } from '@angular/core';
+import { first, Observable, Subject, tap } from 'rxjs';
 import { StateButtonContentDirective } from './state-button-content.directive';
 import { StateButtonState, StateButtonType } from './state-button.model';
 
@@ -8,7 +8,7 @@ import { StateButtonState, StateButtonType } from './state-button.model';
     templateUrl: './state-button.component.html',
     styleUrls: ['./state-button.component.scss']
 })
-export class StateButtonComponent implements AfterContentInit, OnDestroy, OnChanges {
+export class StateButtonComponent implements AfterContentInit, OnChanges {
 
     @HostBinding("class.--disabled") disabled: boolean = false;
 
@@ -20,14 +20,8 @@ export class StateButtonComponent implements AfterContentInit, OnDestroy, OnChan
     @Output() onComplete: EventEmitter<any> = new EventEmitter<any>();
 
     currentTemplate!: TemplateRef<any> | null;
-    #unsubscribeTrigger$ = new Subject();
 
     constructor() { }
-
-    ngOnDestroy(): void {
-        this.#unsubscribeTrigger$.next(null);
-        this.#unsubscribeTrigger$.complete();
-    }
 
     ngOnChanges(changes: SimpleChanges): void {
         this.currentTemplate = this.#getTemplateByState(StateButtonState.LOADING);
@@ -36,7 +30,6 @@ export class StateButtonComponent implements AfterContentInit, OnDestroy, OnChan
             this.disabled = true;
 
             this.observe.pipe(
-                takeUntil(this.#unsubscribeTrigger$),
                 tap(x => console.log("Retrieving data...")),
                 first()
             ).subscribe({

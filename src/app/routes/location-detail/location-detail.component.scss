@@ -5,7 +5,8 @@
 
     .weather-location-details {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
         margin: 24px 0;
         padding: 16px 24px;
         background-color: #f8f8f8;
@@ -13,6 +14,35 @@
         border-radius: 6px;
         min-height: 135px;
 
-        
+        h3 {
+            margin: 0;
+            padding-bottom: 16px;
+        }
+
+        .forecast-container {
+            display: flex;
+
+            &.separator {
+                border-bottom: 1px solid lightgrey;
+            }
+
+            &:not(:last-child) {
+                padding-bottom: 24px;
+                margin-bottom: 24px;
+            }
+
+            .forecast-data {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                width: 75%;
+            }
+
+            .weather-icon {
+                flex-grow: 1;
+                display: flex;
+                justify-content: center;
+            }
+        }
     }
 }

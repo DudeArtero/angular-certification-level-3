@@ -21,10 +21,10 @@ export class LocationStorageService {
     addLocation(newLocation: Location): void {
         let locations: Location[] = this.#getLocations();
 
-        if (!locations.some(location => location.name === newLocation.name)) {
+        if (!locations.some(location => location.zipcode === newLocation.zipcode && location.name === newLocation.name)) {
             locations.push(newLocation);
             localStorage.setItem(this.#LOCATION_KEY, JSON.stringify(locations));
-    
+
             this.#locations$.next(locations);
         }
     }
@@ -34,18 +34,19 @@ export class LocationStorageService {
      * @param name Name of the location
      * @returns Location | undefined
      */
-    getLocation(name: string): Location | undefined {
-        return this.#getLocations().find(location => location.name === name);
+    getLocation(zipcode: number, name: string): Location | undefined {
+        return this.#getLocations().find(location => location.zipcode === zipcode && location.name === name);
     }
 
     /**
+     * /**
      * Removes the provided location from the list stored in localStorage.
-     * @param location Location name
+     * @param zipcode zipcode of the location
+     * @param name Name of the location
      */
-    removeLocation(name: string): void { 
+    removeLocation(zipcode: number, name: string): void {
         const locations: Location[] = this.#getLocations();
-
-        let filteredLocations: Location[] = locations.filter(storedLocation => storedLocation.name !== name);
+        let filteredLocations: Location[] = locations.filter(storedLocation => !(storedLocation.name === name && storedLocation.zipcode === zipcode));
         localStorage.setItem(this.#LOCATION_KEY, JSON.stringify(filteredLocations));
 
         this.#locations$.next(filteredLocations);
@@ -55,7 +56,7 @@ export class LocationStorageService {
      * Returns an array of string from localStorage with the locations. Empty array if there isn't any.
      * @returns String[] with the locations.
      */
-    #getLocations(): Location[] { 
+    #getLocations(): Location[] {
         return (<Location[]>JSON.parse(localStorage.getItem(this.#LOCATION_KEY) ?? '[]')) ?? [];
     }
 }

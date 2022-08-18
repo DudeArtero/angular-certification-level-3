@@ -10,7 +10,7 @@
             </div>
         </div>
     
-        <button [routerLink]="['/weather-location-detail', location.name]">Show 5-day forecast for {{location.name}}</button>
+        <button [routerLink]="['/weather-location-detail', location.zipcode, location.name]">Show 5-day forecast for {{location.name}}</button>
     </div>
     <div class="weather-icon">
         <img src="assets/weather-icons/{{location.data?.icon}}.png" alt="">
